@@ -52,8 +52,11 @@ public class IO {
     }
 
     public static void spit(String path, String content) {
-        log.trace(String.format("Spitting to \"%s\".", path));
-        try (Writer out = new BufferedWriter(new FileWriter(path))) {
+        spit(path, content, false);
+    }
+
+    public static void spit(String path, String content, boolean append) {
+        try (Writer out = new BufferedWriter(new FileWriter(path, append))) {
             out.write(content);
         } catch (IOException ex) {
             String message = String.format("Failed to spit to \"%s\".", path);
