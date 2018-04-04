@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -61,6 +62,12 @@ public class IO {
         } catch (IOException ex) {
             String message = String.format("Failed to spit to \"%s\".", path);
             throw new UncheckedIOException(message, ex);
+        }
+    }
+
+    public static void withSpitter(String path, Consumer<Spitter> consumer) {
+        try (Spitter spitter = new Spitter(path)) {
+            consumer.accept(spitter);
         }
     }
 
@@ -119,7 +126,8 @@ public class IO {
     public static Stream<String> streamLines(String path) {
         try {
             return Files.lines(Paths.get(path));
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
     }
