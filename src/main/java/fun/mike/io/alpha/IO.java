@@ -91,7 +91,7 @@ public class IO {
         try (Reader isReader = new InputStreamReader(is, "UTF-8");
              Reader reader = new BufferedReader(isReader)) {
             StringBuilder stringBuilder = new StringBuilder();
-            int c = 0;
+            int c;
             while ((c = reader.read()) != -1) {
                 stringBuilder.append((char) c);
             }
@@ -188,7 +188,7 @@ public class IO {
     }
 
     public static Set<PosixFilePermission> fullAccess() {
-        Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+        Set<PosixFilePermission> perms = new HashSet<>();
 
         perms.add(PosixFilePermission.OWNER_READ);
         perms.add(PosixFilePermission.OWNER_WRITE);

@@ -6,12 +6,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 public class Spitter implements AutoCloseable {
-    private final String path;
-
     private final BufferedWriter writer;
 
     public Spitter(String path) {
-        this.path = path;
         try {
             this.writer = new BufferedWriter(new FileWriter(path));
         } catch (IOException ex) {
