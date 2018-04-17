@@ -123,6 +123,10 @@ public class IO {
         return new File(path).exists();
     }
 
+    public static boolean doesNotExist(String path) {
+        return !new File(path).exists();
+    }
+
     public static Stream<String> streamLines(String path) {
         try {
             return Files.lines(Paths.get(path));
