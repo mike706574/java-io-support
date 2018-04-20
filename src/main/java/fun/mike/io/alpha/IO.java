@@ -57,10 +57,15 @@ public class IO {
     }
 
     public static void spit(String path, String content, boolean append) {
-        try (Writer out = new BufferedWriter(new FileWriter(path, append))) {
+        spit(new File(path), content, append);
+    }
+
+    public static void spit(File file, String content, boolean append) {
+        try (Writer out = new BufferedWriter(new FileWriter(file, append))) {
             out.write(content);
         } catch (IOException ex) {
-            String message = String.format("Failed to spit to \"%s\".", path);
+            String message = String.format("Failed to spit to \"%s\".",
+                                           file.getAbsolutePath());
             throw new UncheckedIOException(message, ex);
         }
     }
