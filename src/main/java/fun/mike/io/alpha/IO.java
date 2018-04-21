@@ -56,6 +56,10 @@ public class IO {
         spit(path, content, false);
     }
 
+    public static void spit(File file, String content) {
+        spit(file, content, false);
+    }
+
     public static void spit(String path, String content, boolean append) {
         spit(new File(path), content, append);
     }
