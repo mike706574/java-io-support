@@ -1,10 +1,9 @@
 # io-support
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/fun.mike/io-support-alpha/badge.svg)](https://maven-badges.herokuapp.com/maven-central/fun.mike/io-support-alpha)
+[![Javadocs](https://www.javadoc.io/badge/fun.mike/map-support-alpha.svg)](https://www.javadoc.io/doc/fun.mike/map-support-alpha)
 
 IO utilities for Java.
-
-[API Docs](http://javadoc.io/doc/fun.mike/io-support-alpha)
 
 ## Build
 
