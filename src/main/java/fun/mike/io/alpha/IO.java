@@ -21,8 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -143,6 +145,34 @@ public class IO {
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
+    }
+
+    public static Stream<String> streamLines(String path, int skip) {
+        return streamLines(path).skip(skip);
+    }
+
+    public static Stream<String> streamLines(String path, int skip, int skipLast) {
+        try(Stream<String> stream = streamLines(path)) {
+            long count = stream.count();
+            return Files.lines(Paths.get(path))
+                .limit(Math.max(0, count - skipLast))
+                .skip(skip);
+        }
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    public static List<String> getLines(String path) {
+        return streamLines(path).collect(Collectors.toList());
+    }
+
+    public static List<String> getLines(String path, int skip) {
+        return streamLines(path, skip).collect(Collectors.toList());
+    }
+
+    public static List<String> getLines(String path, int skip, int skipLast) {
+        return streamLines(path, skip, skipLast).collect(Collectors.toList());
     }
 
     public static String slashify(String path) {
