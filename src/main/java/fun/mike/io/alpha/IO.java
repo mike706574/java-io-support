@@ -37,7 +37,7 @@ public class IO {
         log.trace(String.format("Creating directory \"%s\".", path));
         if (!new File(path).mkdir()) {
             String message = String.format("Failed to create directory \"%s\".", path);
-            throw new UncheckedIOException(new IOException(message));
+            throw failure(message);
         }
     }
 
@@ -50,7 +50,7 @@ public class IO {
             oc.transferFrom(ic, 0, ic.size());
         } catch (IOException ex) {
             String message = String.format("Failed to copy \"%s\" to \"%s\".", srcPath, destPath);
-            throw new UncheckedIOException(message, ex);
+            throw failure(message, ex);
         }
     }
 
@@ -72,7 +72,7 @@ public class IO {
         } catch (IOException ex) {
             String message = String.format("Failed to spit to \"%s\".",
                                            file.getAbsolutePath());
-            throw new UncheckedIOException(message, ex);
+            throw failure(message, ex);
         }
     }
 
@@ -90,11 +90,11 @@ public class IO {
             try {
                 return new String(Files.readAllBytes(Paths.get(path)), "UTF-8");
             } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
+                throw failure(ex);
             }
         } catch (IOException ex) {
             String message = String.format("Failed to slurp from \"%s\".", path);
-            throw new UncheckedIOException(message, ex);
+            throw failure(message, ex);
         }
     }
 
@@ -108,7 +108,7 @@ public class IO {
             }
             return stringBuilder.toString();
         } catch (IOException ex) {
-            throw new UncheckedIOException("Failed to slurp from input stream.", ex);
+            throw failure("Failed to slurp from input stream.", ex);
         }
     }
 
@@ -126,6 +126,22 @@ public class IO {
         file.delete();
     }
 
+    public static void delete(String path) {
+        delete(new File(path));
+    }
+
+    public static void delete(File file) {
+        boolean deleted = file.delete();
+        if(!deleted) {
+            String message = String.format("Failed to delete \"%s\".", file.getAbsolutePath());
+            throw failure(message);
+        }
+    }
+
+    /**
+     * @deprecated Use {@link #nuke(String)} or {@link #delete(String)}.
+     */
+    @Deprecated
     public static void deleteQuietly(String path) {
         new File(path).delete();
     }
@@ -143,7 +159,7 @@ public class IO {
             return Files.lines(Paths.get(path));
         }
         catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+            throw failure(ex);
         }
     }
 
@@ -159,7 +175,7 @@ public class IO {
                 .skip(skip);
         }
         catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+            throw failure(ex);
         }
     }
 
@@ -196,7 +212,7 @@ public class IO {
         try {
             Files.setPosixFilePermissions(path, perms);
         } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+            throw failure(ex);
         }
     }
 
@@ -213,7 +229,7 @@ public class IO {
             Files.walk(Paths.get(path))
                     .forEach(childPath -> chmod(childPath, perms));
         } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+            throw failure(ex);
         }
     }
 
@@ -226,7 +242,7 @@ public class IO {
                         childPath.toFile().setWritable(true, ownerOnly);
                     });
         } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+            throw failure(ex);
         }
     }
 
@@ -246,5 +262,17 @@ public class IO {
         perms.add(PosixFilePermission.OTHERS_EXECUTE);
 
         return perms;
+    }
+
+    private static UncheckedIOException failure(String message) {
+        return new UncheckedIOException(new IOException(message));
+    }
+
+    private static UncheckedIOException failure(String message, IOException ex) {
+        return new UncheckedIOException(message, ex);
+    }
+
+    private static UncheckedIOException failure(IOException ex) {
+        return new UncheckedIOException(ex);
     }
 }
