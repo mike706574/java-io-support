@@ -148,6 +148,21 @@ public class IO {
         return slurp(Thread.currentThread().getContextClassLoader().getResourceAsStream(path));
     }
 
+    public static void clearDirectory(String path) {
+        File directory = new File(path);
+        if (!directory.exists() && !directory.isDirectory()) {
+            String message = String.format("\"%s\" is not a directory.", path);
+            throw new IllegalArgumentException(message);
+        }
+        log.trace(String.format("Clearing directory \"%s\".", path));
+        for (File file : directory.listFiles()) {
+            if (file.isFile()) {
+                log.trace(String.format("Deleting file \"%s\".", file.getAbsolutePath()));
+                file.delete();
+            }
+        }
+    }
+
     public static void nuke(String path) {
         File file = new File(path);
         if (file.isDirectory()) {
