@@ -4,20 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class IOTest {
     private static final String base = "src/test/resources/";
@@ -53,7 +48,7 @@ public class IOTest {
                      IO.getLines(five, 2));
         assertEquals(Arrays.asList("four", "five"),
                      IO.getLines(five, 3));
-        assertEquals(Arrays.asList("five"),
+        assertEquals(Collections.singletonList("five"),
                      IO.getLines(five, 4));
         assertEquals(Collections.emptyList(),
                      IO.getLines(five, 5));
@@ -66,7 +61,7 @@ public class IOTest {
                      IO.getLines(five, 0, 2));
         assertEquals(Arrays.asList("one", "two"),
                      IO.getLines(five, 0, 3));
-        assertEquals(Arrays.asList("one"),
+        assertEquals(Collections.singletonList("one"),
                      IO.getLines(five, 0, 4));
         assertEquals(Collections.emptyList(),
                      IO.getLines(five, 0, 5));
@@ -87,7 +82,7 @@ public class IOTest {
                      IO.streamLines(five, 2).collect(Collectors.toList()));
         assertEquals(Arrays.asList("four", "five"),
                      IO.streamLines(five, 3).collect(Collectors.toList()));
-        assertEquals(Arrays.asList("five"),
+        assertEquals(Collections.singletonList("five"),
                      IO.streamLines(five, 4).collect(Collectors.toList()));
         assertEquals(Collections.emptyList(),
                      IO.streamLines(five, 5).collect(Collectors.toList()));
@@ -100,7 +95,7 @@ public class IOTest {
                      IO.streamLines(five, 0, 2).collect(Collectors.toList()));
         assertEquals(Arrays.asList("one", "two"),
                      IO.streamLines(five, 0, 3).collect(Collectors.toList()));
-        assertEquals(Arrays.asList("one"),
+        assertEquals(Collections.singletonList("one"),
                      IO.streamLines(five, 0, 4).collect(Collectors.toList()));
         assertEquals(Collections.emptyList(),
                      IO.streamLines(five, 0, 5).collect(Collectors.toList()));
