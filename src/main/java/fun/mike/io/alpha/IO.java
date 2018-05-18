@@ -13,6 +13,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
@@ -92,6 +93,37 @@ public class IO {
             } catch (IOException ex) {
                 throw failure(ex);
             }
+        } catch (IOException ex) {
+            String message = String.format("Failed to slurp from \"%s\".", path);
+            throw failure(message, ex);
+        }
+    }
+
+    public static String slurp(File file) {
+        String path = file.getAbsolutePath();
+        log.trace(String.format("Slurping from \"%s\".", path));
+        try (InputStream is = new FileInputStream(file)) {
+            return slurp(is);
+        } catch (IOException ex) {
+            String message = String.format("Failed to slurp from \"%s\".", path);
+            throw failure(message, ex);
+        }
+    }
+
+    public static String slurp(URI uri) {
+        try {
+            return slurp(uri.toURL());
+        } catch (MalformedURLException ex) {
+            String message = String.format("Failed to slurp from \"%s\".", uri.toString());
+            throw failure(message, ex);
+        }
+    }
+
+    public static String slurp(URL url) {
+        String path = url.toString();
+        log.trace(String.format("Slurping from \"%s\".", path));
+        try (InputStream is = url.openConnection().getInputStream()) {
+            return slurp(is);
         } catch (IOException ex) {
             String message = String.format("Failed to slurp from \"%s\".", path);
             throw failure(message, ex);

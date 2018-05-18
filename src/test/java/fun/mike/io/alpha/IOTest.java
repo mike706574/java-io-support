@@ -1,5 +1,13 @@
 package fun.mike.io.alpha;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +24,22 @@ public class IOTest {
 
     private static final String empty = base + "empty.txt";
     private static final String five = base + "five.txt";
+
+    @Test
+    public void slurping() throws IOException, URISyntaxException {
+        String expected = "foo\n";
+        String path = base + "foo.txt";
+        File file = new File(path);
+        URL url = new URL("file://" + file.getAbsolutePath());
+
+        try(InputStream inputStream = new FileInputStream(file)) {
+            assertEquals(expected, IO.slurp(path));
+            assertEquals(expected, IO.slurp(file));
+            assertEquals(expected, IO.slurp(url));
+            assertEquals(expected, IO.slurp(url.toURI()));
+            assertEquals(expected, IO.slurp(inputStream));
+        }
+    }
 
     @Test
     public void getLines() {
