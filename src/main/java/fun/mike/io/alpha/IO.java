@@ -131,8 +131,7 @@ public class IO {
     }
 
     public static String slurp(InputStream is) {
-        try (Reader isReader = new InputStreamReader(is, "UTF-8");
-             Reader reader = new BufferedReader(isReader)) {
+        try (Reader reader = ReaderFactory.buffered(is)) {
             StringBuilder stringBuilder = new StringBuilder();
             int c;
             while ((c = reader.read()) != -1) {
@@ -224,6 +223,10 @@ public class IO {
         catch (IOException ex) {
             throw failure(ex);
         }
+    }
+
+    public static Stream<String> streamLines(InputStream inputStream) {
+        return ReaderFactory.buffered(inputStream).lines();
     }
 
     public static List<String> getLines(String path) {
